@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         REPO_URL = "https://github.com/SaiJashwanth3107/LearningSession.git"
-        APP_NAME = "JaswanthLearningSession"
+        APP_NAME = "jaswanthlearningsession"
         DOCKER_IMAGE = "jaswanthlearningsession"
         BETA_PORT = 8094
         GAMMA_PORT = 8095
