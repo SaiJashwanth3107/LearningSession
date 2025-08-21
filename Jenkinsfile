@@ -6,12 +6,11 @@ pipeline {
     }
     environment {
         APP_NAME = "LearningSession"
-        BETA_PORT = 8081
-        GAMMA_PORT = 8082
-        PROD_PORT = 8083
+        BETA_PORT = 8094
+        GAMMA_PORT = 8095
         SERVER_IP = "localhost"
         LOG_DIR = "${WORKSPACE}/logs"
-        DOCKER_IMAGE = "thoufiqzeero/learning_session"
+        DOCKER_IMAGE = "jaswanthzeero/learning_session"
         DOCKER_TAG = "${env.BUILD_NUMBER}"
     }
     stages {
@@ -29,7 +28,7 @@ pipeline {
         }
         stage ("Checkout") {
             steps {
-                git url: 'https://github.com/puli-reddy/LearningSession.git', branch: 'main'
+                git url: 'https://github.com/SaiJashwanth3107/LearningSession.git', branch: 'main'
                 sh 'chmod +x mvnw'
             }
         }
@@ -112,28 +111,6 @@ pipeline {
                 }
              }
         }
-        stage('Deploy to Prod') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
-            steps {
-                echo "Deploying to Prod environment on port ${PROD_PORT}"
-                script {
-                    sh """
-                        docker rm -f ${APP_NAME}-prod || true
-                    """
-                    sh """
-                        docker run -d --name ${APP_NAME}-prod -p ${PROD_PORT}:${PROD_PORT} \
-                        -e SPRING_PROFILES_ACTIVE=prod \
-                        ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
-//                     sleep(time: 60, unit: "SECONDS")
-                    def maxRetries = 3
-                    def retryDelay = 10
-                    echo "Prod is running on http://${SERVER_IP}:${PROD_PORT}/"
-                    sh "docker ps | grep ${APP_NAME}-prod || exit 1"
-                }
-            }
-        }
+
     }
 }
